@@ -1,0 +1,158 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <fstream>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+//random number generator---------------
+class random {
+public:
+	virtual int chosen() = 0;
+	int const lim = 7;
+};
+class base:public random {
+private:
+
+public:
+	base() {};
+	int chosen() {
+		return rand() % lim;
+	}
+};
+
+//country selection
+class country:public base {
+
+
+
+public:
+	country():base(){}
+
+	string word[7]= { "india","pakistan","afghanistan","egypt","finland","france","argentina" };
+	int anstype(char ans, string c, string& u) {
+		int b = 0;
+		int a = c.length();
+		for (int i = 0; i< a; i++)
+		{
+			if (ans == u[i])
+				return 0;
+			if (ans == c[i]) {
+				u[i] = ans;
+				b++;
+			}
+		}
+		return b;
+	}
+};
+
+//computer selection
+class computer:public  base {
+
+public:
+	computer() :base() {}
+
+	string word[7] = { "monitor","mouse","keyboard","memory","disk","motherboard","processors" };
+	int anstype(char ans, string c, string& u) {
+		int b = 0;
+		for (int i = 0; i< c.length(); i++){
+			if (ans == u[i])
+				return 0;
+			if (ans == c[i]) {
+				u[i] = ans;
+				b++;
+			}
+		}
+		return b;
+	}
+};
+
+int main()
+{
+	srand(time(NULL));
+	computer c1;                                         //initializes computer object
+	country c2;                                          //initializes country object
+	char ans;                                            // user input
+	int mistake = 0;                                     // mistake count
+	string wha;                                         //yes or no?
+
+	base a;                                             //calls the random number generator
+	int b = a.chosen();                                 //random is added into b
+
+	string c = c1.word[b];                              // the string 
+	string d = c2.word[b];
+	string u(c.length(), 'x');
+	cout << "\tWelcome to Hangman!\n";
+	cout << "The category is of your choice: \n";
+
+	do {
+
+	cout << "Input 1 for computer or 2 for country:  \n";
+
+	int input;
+	cin >> input;
+
+
+		if (input == 1) {
+			while (mistake < 7){
+			cout << "The length of the word is " << c.length() << " characters" << endl;
+
+				for (int i = 0; i < c.length(); i++) {
+					cout << 'x';
+				}
+				cout << "\n\nGuess a letter: ";
+				cin >> ans;
+
+				if (c1.anstype(ans, c, u) == 0){
+					cout << endl << "Wrong Letter." << endl;
+					mistake++;
+				}
+				else{
+					cout << endl << "You found a letter" << endl;
+				}
+				cout << "You have " << 7 - mistake;
+				cout << " guesses left." << endl;
+				if (c == u) {
+					cout << "Congratulation !!! You passed my word. Play again ? Yes / No" << endl;
+					cin >> wha;
+				}
+			}
+
+
+		}
+		else if (input == 2) {
+			while (mistake < 7){
+			cout << "The length of the word is " << d.length() << " characters" << endl;
+
+				for (int i = 0; i < d.length(); i++) {
+					cout << 'x';
+				}
+				cout << "\n\nGuess a letter: ";
+				cin >> ans;
+
+				if (c2.anstype(ans, c, u) == 0){
+					cout << endl << "Wrong Letter." << endl;
+					mistake++;
+				}
+				else
+				{
+					cout << endl << "You found a letter" << endl;
+				}
+				cout << "You have " << 7 - mistake;
+				cout << " guesses left." << endl;
+				if (c == u) {
+					cout << "Congratulation !!! You passed my word. Play again ? Yes / No" << endl;
+					cin >> wha;
+				}
+			}
+		}
+		else {
+			cout << "Input is invalid, Try again by pressing yes: \n";
+			cin >> wha;
+		}
+	} while (wha == "Yes" || wha == "yes");
+
+	return 0;
+
+}

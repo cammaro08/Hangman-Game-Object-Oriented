@@ -1,0 +1,30 @@
+#include <iostream>
+#include <fstream>
+
+
+using namespace std;
+
+int main()
+{
+    ifstream file("list.txt");
+
+    if(file.is_open())
+    {
+        cout<<"file is open"<<endl;
+    }
+        else{
+            cout<<"file is not opened"<<endl;
+        }
+    string country;
+    double no = 4;
+    double kk = no;
+
+    while (file >> no >> country){   //looping through whole file
+    if(no == kk)
+    {cout<< no << ' ' <<country<<endl;}
+    }
+
+	return 0;
+
+
+}

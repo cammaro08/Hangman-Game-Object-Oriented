@@ -1,0 +1,226 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <fstream>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+
+class random{                                         //abstract
+public:
+	virtual int chosen() = 0;
+	int const lim = 7;
+};
+
+class base :public random {							 // super
+public:
+	base() {};
+	int chosen() {
+		return rand() % lim;
+	}
+	void arrayhanged() {
+			cout << "\t  O   " << endl;
+			cout << "\t/ | \\ " << endl;
+			cout << "\t  |   " << endl;
+			cout << "\t/   \\ " << endl;
+	}
+	friend void ArrayFileOutput(int);
+};
+
+
+//computer selection
+class computer :public  base {
+
+public:
+	computer() :base() {}
+
+	string word[7] = { "monitor","mouse","keyboard","memory","disk","motherboard","processors" };
+	int anstype(char ans, string d, string& u) {
+		int b = 0;
+		for (int i = 0; i< d.length(); i++) {
+			if (ans == u[i])
+				return 0;
+			if (ans == d[i]) {
+				u[i] = ans;
+				b++;
+			}
+		}
+		return b;
+	}
+
+	~computer() {};
+};
+//country selection
+class country :public base {
+public:
+	country() :base() {}
+	string word[7] = { "india", "pakistan", "afghanistan", "egypt", "finland", "france", "argentina" };
+	int anstype(char ans, string c, string& u) {
+		
+		int b = 0;
+		for (int i = 0; i< c.length(); i++){
+			if (ans == u[i])
+				return 0;
+			if (ans == c[i]) {
+				u[i] = ans;
+				b++;
+			}
+		}
+		return b;
+	}
+	~country() {};
+};
+
+
+int main(){
+
+	
+	srand(time(NULL));
+
+	computer c1;                                         //initializes computer object
+	country c2;                                          //initializes country object
+	char ans;                                            // user input
+	int mistake = 0;                                     // mistake count
+	string wha;                                         //yes or no?
+
+	base a;                                             //calls the random number generator
+	int b = a.chosen();									//random is added into b
+
+	
+	string c = c1.word[b];                              // the string 
+	string d = c2.word[b];
+	string u(c.length(), 'x');
+	string u2(d.length(), 'x');
+
+	cout << "\t\tWelcome to Hangman!\n\n";
+	cout << "The category is of your choice: \n";
+	base* i[2] = { &c1, &c2 };
+	do {
+
+		cout << "Enter 0 - computer \nEnter 1 - country:  \n";
+
+		int input;
+		cin >> input;
+		
+		//computer
+		if (input == 0) {
+
+			cout << "The length of the word is " << c.length() << " characters" << endl;
+
+				while (mistake < 7) {
+
+					cout << u;
+					cout << "\n\nGuess a letter: ";
+					cin >> ans;
+						if (c1.anstype(ans, c, u) == 0) {
+							cout << endl << "Wrong Letter." << endl;
+							mistake++;
+						}
+						else {
+							cout << endl << "You found a letter" << endl;
+						}
+							cout << "You have " << 7 - mistake;
+							cout << " guesses left." << endl;
+						
+						if (c == u) {
+							cout << "Congratulation !!! You passed my word. Play again ? Yes / No" << endl;
+							cin >> wha;
+							break;
+						}						
+						if (mistake == 7) {
+							cout << "Sorry you failed. The word was: " << c << "\n";
+							i[input]->arrayhanged();
+							cout << " Play again ? Yes / No " << endl;
+							cin >> wha;
+							break;
+					}
+				}
+				ArrayFileOutput(mistake);
+		}
+		//country
+		else if (input == 1) {
+
+			cout << "The length of the word is " << d.length() << " characters" << endl;
+			while (mistake < 7) {
+				cout << u2;
+				cout << "\n\nGuess a letter: ";
+				cin >> ans;
+				if (b == b) {
+					if (c2.anstype(ans, d, u2) == 0) {
+						cout << endl << "Wrong Letter." << endl;
+						mistake++;
+					}
+					else {
+						cout << endl << "You found a letter" << endl;
+					}
+					
+						cout << "You have " << 7 - mistake;
+						cout << " guesses left." << endl;
+					
+					if (d == u2) {
+						cout << "Congratulation !!! You passed my word. Play again ? Yes / No" << endl;
+						cin >> wha;
+						break;
+					}
+					if (mistake == 7) {
+						cout << "Sorry you failed. The word was: " << d << "\n";
+						i[input]->arrayhanged();
+						cout << " Play again ? Yes / No " << endl;
+						cin >> wha;
+						break;
+					}
+				}
+			}
+			ArrayFileOutput(mistake);
+		}
+		else {
+			cout << "Input is invalid, Try again by pressing yes: \n";
+			cin >> wha;
+		}
+	} while (wha == "Yes" || wha == "yes");
+
+	return 0;
+
+}
+void ArrayFileOutput(int m) {
+	ofstream fout;
+	fout.open("hanged.txt", ios::app);
+	if (fout.is_open()) {
+
+		if (m == 0) {
+			fout << "\tO   " << endl;
+		}
+		else if (m == 1) {
+			fout << "\t  O   " << endl;
+			fout << "\t/     "<<endl;
+		}else if (m == 2) {
+			fout << "\t  O   " << endl;
+			fout << "\t/ |   " << endl;
+		}else if (m == 3) {
+			fout << "\t  O   " << endl;
+			fout << "\t/ | \\" << endl;
+		}
+		else if (m == 4) {
+			fout << "\t  O   " << endl;
+			fout << "\t/ | \\" << endl;
+			fout << "\t  |   " << endl;
+		}else if(m == 5){
+			fout << "\t  O   " << endl;
+			fout << "\t/ | \\" << endl;
+			fout << "\t  |   " << endl;
+			fout << "\t/     " << endl;
+		}
+		else if (m == 6) {
+			fout << "\t  O   " << endl;
+			fout << "\t/ | \\" << endl;
+			fout << "\t  |   " << endl;
+			fout << "\t/   \\" << endl;
+		}
+		fout.close();
+		cout << "Data is written to file.\n";
+	}
+	else {
+		cout << "The file cannot be opened.\n";
+	}
+}

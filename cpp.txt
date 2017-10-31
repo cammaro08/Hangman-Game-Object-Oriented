@@ -1,0 +1,67 @@
+#include <cstdlib>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <fstream>
+
+
+using namespace std;
+
+int main()
+{
+	int chosen = rand() % 7;
+	const int lim = 7;
+	string word[lim];
+	ifstream File;
+	File.open("List.txt", ios::in);
+	if (File.is_open()) {
+		while (File >> word[lim]) {
+			cout << "file opened\n" << endl;
+		}
+		File.close();
+	}
+	else {
+		cout << "The file cannot be opened.\n";
+	}
+
+	string answer;
+	int mistake = 0;
+	string guess;
+
+
+	cout << "The length of the word is " << word[chosen].length() << " characters" << endl;
+	cout << "Guess the word: ";
+
+	for (int i = 0; i< word[chosen].length(); i++)
+	{
+		cout << 'x';
+	}
+
+	cout << "\nEnter your guess: ";
+	cin >> answer;
+
+
+	cout << "You entered: " << endl;
+	for (int i = 0; i <= 7; i++)
+	{
+		cout << guess[i] << " ";
+		cout << endl;
+	}
+
+
+
+	if (answer == word[chosen])
+	{
+		cout << "Congratulations!!! You guessed my word." << endl;
+	}
+	else
+	{
+		mistake++;
+	}
+
+
+
+	system("PAUSE");
+	return 0;
+
+}
